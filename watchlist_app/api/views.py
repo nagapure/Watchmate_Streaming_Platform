@@ -11,7 +11,7 @@ from rest_framework import mixins
 from rest_framework import viewsets
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated,IsAuthenticatedOrReadOnly
-from watchlist_app.api.permissions import AdminOrReadOnly
+from watchlist_app.api.permissions import AdminOrReadOnly, ReviewUserOrReadOnly
 
 
 # Generics
@@ -56,7 +56,9 @@ class ReviewCreate(generics.CreateAPIView):
 class ReviewDetails(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    
+    # Customer permissions
+    permission_classes = [ReviewUserOrReadOnly]
 
 
 
