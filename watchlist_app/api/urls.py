@@ -15,7 +15,7 @@ router.register('stream', SteamPlatformVS, basename = 'streamplatform')
 
 urlpatterns = [
     path('list/', WatchlistListAV.as_view(), name='movie-list'),
-    path('list/<int:pk>', WatchlistDetailsAV.as_view(), name='movie-details'),
+    path('<int:pk>/', WatchlistDetailsAV.as_view(), name='movie-details'),
     
     path('', include(router.urls)),
     
@@ -26,9 +26,9 @@ urlpatterns = [
     # path('review/', ReviewList.as_view(), name='review-list'),
     # path('review/<int:pk>', ReviewDetails.as_view(), name='review-details'),
     
-    path('stream/<int:pk>/review-create/', ReviewCreate.as_view(), name='review-create'),
-    path('stream/<int:pk>/review/', ReviewList.as_view(), name='review-list'),
-    path('stream/review/<int:pk>', ReviewDetails.as_view(), name='review-details'),
+    path('<int:pk>/review-create/', ReviewCreate.as_view(), name='review-create'),
+    path('<int:pk>/review/', ReviewList.as_view(), name='review-list'),
+    path('review/<int:pk>/', ReviewDetails.as_view(), name='review-details'),
     
     
     
