@@ -11,7 +11,7 @@ from rest_framework import mixins
 from rest_framework import viewsets
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated,IsAuthenticatedOrReadOnly
-from watchlist_app.api.permissions import AdminOrReadOnly, ReviewUserOrReadOnly
+from watchlist_app.api.permissions import IsAdminOrReadOnly, IsReviewUserOrReadOnly
 
 
 # Generics
@@ -19,7 +19,7 @@ from watchlist_app.api.permissions import AdminOrReadOnly, ReviewUserOrReadOnly
 class ReviewList(generics.ListAPIView):
     # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
     
     # Overriding queryset
     def get_queryset(self):
@@ -33,6 +33,7 @@ class ReviewList(generics.ListAPIView):
     
 class ReviewCreate(generics.CreateAPIView):
     serializer_class = ReviewSerializer
+    permission_classes = [IsReviewUserOrReadOnly]
 
     
     def get_queryset(self):
@@ -67,7 +68,7 @@ class ReviewDetails(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ReviewSerializer
     
     # Customer permissions
-    permission_classes = [ReviewUserOrReadOnly]
+    permission_classes = [IsReviewUserOrReadOnly]
 
 
 
@@ -96,6 +97,8 @@ class ReviewDetails(generics.RetrieveUpdateDestroyAPIView):
 # View for Watchlist ==============================
 
 class WatchlistListAV(APIView):
+    permission_classes = [IsAdminOrReadOnly]
+
     def get(self,request):
         movie = Watchlist.objects.all()
         serializer = WatchlistSerializer(movie, many=True, )
@@ -112,6 +115,8 @@ class WatchlistListAV(APIView):
 
 
 class WatchlistDetailsAV(APIView):
+    permission_classes = [IsAdminOrReadOnly]
+
     def get(self, request, pk):
         try:
             movie = Watchlist.objects.get(pk=pk)
@@ -151,6 +156,8 @@ class WatchlistDetailsAV(APIView):
 # ModelViewSet for SteamPlatform ==============================
             
 class SteamPlatformVS(viewsets.ModelViewSet): 
+    permission_classes = [IsAdminOrReadOnly]
+
     queryset = StreamPlatform.objects.all()
     serializer_class = StreamPlatformSerializer
 
@@ -199,6 +206,8 @@ class SteamPlatformVS(viewsets.ModelViewSet):
 # View for SteamPlatform ==============================
 
 class StreamPlatformAV(APIView):
+    permission_classes = [IsAdminOrReadOnly]
+
     def get(self, request):
         platform = StreamPlatform.objects.all()
         serializer = StreamPlatformSerializer(platform, many=True,context={'request': request})
@@ -213,6 +222,8 @@ class StreamPlatformAV(APIView):
         
 
 class StreamPlatformDetailAV(APIView):
+    permission_classes = [IsAdminOrReadOnly]
+
     def get(self, request, pk):
         try:
             platform = StreamPlatform.objects.get(pk=pk)
