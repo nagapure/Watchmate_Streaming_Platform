@@ -6,7 +6,7 @@ from user_app import models
 from rest_framework import status
 
 
-
+# Logout view for user
 @api_view(['POST'])
 def logout_view(request):
     
@@ -15,6 +15,7 @@ def logout_view(request):
         return Response({"message": "User logout successfully"},status = status.HTTP_200_OK)
     
 
+# Registrations view for user
 @api_view(['POST',])
 def registration_view(request):
     if request.method == 'POST':
