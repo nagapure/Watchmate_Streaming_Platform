@@ -18,31 +18,17 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from watchlist_app.api.permissions import IsAdminOrReadOnly, IsReviewUserOrReadOnly
+from watchlist_app.api.throttling import ReviewCreateThrottle, ReviewListThrottle
 
 
 # Generics
 
 
-class ReviewList(generics.ListAPIView):
-    # queryset = Review.objects.all()
-    serializer_class = ReviewSerializer
-    permission_classes = (IsAuthenticated,)
-    throttle_classes = [UserRateThrottle, AnonRateThrottle]
-
-
-    # Overriding queryset
-    def get_queryset(self):
-        pk = self.kwargs["pk"]
-        query = Review.objects.filter(watchlist=pk)
-        return query
-
-    # def watchlist_data(self,request):
-    #     data =
-
-
 class ReviewCreate(generics.CreateAPIView):
     serializer_class = ReviewSerializer
     permission_classes = [IsReviewUserOrReadOnly]
+    throttle_classes = [ReviewCreateThrottle]
+
 
     def get_queryset(self):
         return Review.objects.all()
@@ -70,6 +56,25 @@ class ReviewCreate(generics.CreateAPIView):
         watchlist.save()
 
         serializer.save(watchlist=watchlist, review_user=review_user)
+
+
+
+class ReviewList(generics.ListAPIView):
+    # queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = (IsAuthenticated,)
+    throttle_classes = [ReviewListThrottle, AnonRateThrottle]
+
+
+    # Overriding queryset
+    def get_queryset(self):
+        pk = self.kwargs["pk"]
+        query = Review.objects.filter(watchlist=pk)
+        return query
+
+    # def watchlist_data(self,request):
+    #     data =
+
 
 
 class ReviewDetails(generics.RetrieveUpdateDestroyAPIView):
