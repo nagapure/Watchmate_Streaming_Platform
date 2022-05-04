@@ -21,14 +21,36 @@ from watchlist_app.api.permissions import IsAdminOrReadOnly, IsReviewUserOrReadO
 from watchlist_app.api.throttling import ReviewCreateThrottle, ReviewListThrottle
 
 
+# class to filter user Review
+class UserReview(generics.ListAPIView):
+    # queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    # permission_classes = (IsAuthenticated,)
+    # throttle_classes = [ReviewListThrottle, AnonRateThrottle]
+
+    # Overriding queryset
+    # Filtering against the URL
+    # def get_queryset(self):
+    #     username = self.kwargs["username"]
+    #     query = Review.objects.filter(review_user__username=username)
+    #     return query
+    
+    
+    # Filtering against query parameters
+    def get_queryset(self):
+        username = self.request.query_params.get('username')        
+        query = Review.objects.filter(review_user__username=username)
+        return query
+
+
 # Generics
 # Updated code
+
 
 class ReviewCreate(generics.CreateAPIView):
     serializer_class = ReviewSerializer
     permission_classes = [IsReviewUserOrReadOnly]
     throttle_classes = [ReviewCreateThrottle]
-
 
     def get_queryset(self):
         return Review.objects.all()
@@ -58,21 +80,17 @@ class ReviewCreate(generics.CreateAPIView):
         serializer.save(watchlist=watchlist, review_user=review_user)
 
 
-
 class ReviewList(generics.ListAPIView):
     # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = (IsAuthenticated,)
     throttle_classes = [ReviewListThrottle, AnonRateThrottle]
 
-
     # Overriding queryset
     def get_queryset(self):
         pk = self.kwargs["pk"]
         query = Review.objects.filter(watchlist=pk)
         return query
-
-    
 
 
 class ReviewDetails(generics.RetrieveUpdateDestroyAPIView):
@@ -153,7 +171,6 @@ class SteamPlatformVS(viewsets.ModelViewSet):
     serializer_class = StreamPlatformSerializer
 
 
-
 class StreamPlatformAV(APIView):
     permission_classes = [IsAdminOrReadOnly]
 
@@ -205,7 +222,3 @@ class StreamPlatformDetailAV(APIView):
             return Response(
                 {"error": "Platform not found"}, status=status.HTTP_404_NOT_FOUND
             )
-
-
-
-

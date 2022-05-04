@@ -7,6 +7,7 @@ from watchlist_app.api.views import (
     ReviewList,
     SteamPlatformVS,
     ReviewCreate,
+    UserReview,
     WatchlistListAV,
     WatchlistDetailsAV,
 )
@@ -22,4 +23,7 @@ urlpatterns = [
     path("<int:pk>/review-create/", ReviewCreate.as_view(), name="review-create"),
     path("<int:pk>/review/", ReviewList.as_view(), name="review-list"),
     path("review/<int:pk>/", ReviewDetails.as_view(), name="review-details"),
+    
+    # path("reviews/<str:username>/", UserReview.as_view(), name="user-review-details"),
+    path("reviews/", UserReview.as_view(), name="user-review-details"),
 ]
