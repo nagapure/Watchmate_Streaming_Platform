@@ -22,7 +22,7 @@ from watchlist_app.api.throttling import ReviewCreateThrottle, ReviewListThrottl
 
 
 # Generics
-
+# Updated code
 
 class ReviewCreate(generics.CreateAPIView):
     serializer_class = ReviewSerializer
