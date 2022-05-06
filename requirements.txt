@@ -1,0 +1,11 @@
+asgiref==3.5.0
+backports.zoneinfo==0.2.1
+Django==4.0.3
+# django-filter==1.1.0
+djangorestframework==3.13.1
+# djangorestframework-filters==0.11.1
+djangorestframework-simplejwt==5.1.0
+Pygments==2.11.2
+PyJWT==2.3.0
+pytz==2022.1
+sqlparse==0.4.2
