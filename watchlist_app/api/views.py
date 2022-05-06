@@ -119,8 +119,13 @@ class WatchlistAV(generics.ListAPIView):
     
     
     # SearchFilter
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['title', 'platform__name']
+    # filter_backends = [filters.SearchFilter]
+    # search_fields = ['title', 'platform__name']
+    
+    
+    # OrderingFilter
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['avg_rating']
 
 
 class WatchlistListAV(APIView):
