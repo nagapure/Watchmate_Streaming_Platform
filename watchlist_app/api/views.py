@@ -20,6 +20,7 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from watchlist_app.api.permissions import IsAdminOrReadOnly, IsReviewUserOrReadOnly
 from watchlist_app.api.throttling import ReviewCreateThrottle, ReviewListThrottle
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 # class to filter user Review
 class UserReview(generics.ListAPIView):
     # queryset = Review.objects.all()
@@ -106,15 +107,28 @@ class ReviewDetails(generics.RetrieveUpdateDestroyAPIView):
     throttle_classes = [UserRateThrottle, AnonRateThrottle]
 
 
+# New Watchlist for filter backends
+class WatchlistAV(generics.ListAPIView):
+    queryset = Watchlist.objects.all()
+    serializer_class = WatchlistSerializer
+    # permission_classes = (IsAuthenticated,)
+    
+    # DjangoFilterBackend
+    # filter_backends = [DjangoFilterBackend]
+    # filterset_fields = ['title', 'platform__name']
+    
+    
+    # SearchFilter
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['title', 'platform__name']
+
+
 class WatchlistListAV(APIView):
-    permission_classes = [IsAdminOrReadOnly]
+    # permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request):
         movie = Watchlist.objects.all()
-        serializer = WatchlistSerializer(
-            movie,
-            many=True,
-        )
+        serializer = WatchlistSerializer(movie, many=True,)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
