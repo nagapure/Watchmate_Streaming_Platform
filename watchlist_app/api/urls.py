@@ -10,6 +10,7 @@ from watchlist_app.api.views import (
     UserReview,
     WatchlistListAV,
     WatchlistDetailsAV,
+    WatchlistAV
 )
 
 router = DefaultRouter()
@@ -19,6 +20,9 @@ router.register("stream", SteamPlatformVS, basename="streamplatform")
 urlpatterns = [
     path("list/", WatchlistListAV.as_view(), name="movie-list"),
     path("<int:pk>/", WatchlistDetailsAV.as_view(), name="movie-details"),
+    path("list2/", WatchlistAV.as_view(), name="watch-list"),
+    
+    
     path("", include(router.urls)),
     path("<int:pk>/review-create/", ReviewCreate.as_view(), name="review-create"),
     path("<int:pk>/review/", ReviewList.as_view(), name="review-list"),
