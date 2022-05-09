@@ -21,6 +21,11 @@ from watchlist_app.api.permissions import IsAdminOrReadOnly, IsReviewUserOrReadO
 from watchlist_app.api.throttling import ReviewCreateThrottle, ReviewListThrottle
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
+from watchlist_app.api.pagination import WatchlistPagination
+
+
+
+
 # class to filter user Review
 class UserReview(generics.ListAPIView):
     # queryset = Review.objects.all()
@@ -111,7 +116,9 @@ class ReviewDetails(generics.RetrieveUpdateDestroyAPIView):
 class WatchlistAV(generics.ListAPIView):
     queryset = Watchlist.objects.all()
     serializer_class = WatchlistSerializer
-    # permission_classes = (IsAuthenticated,)
+    pagination_class = WatchlistPagination
+    
+    
     
     # DjangoFilterBackend
     # filter_backends = [DjangoFilterBackend]
