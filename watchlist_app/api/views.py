@@ -22,7 +22,12 @@ from watchlist_app.api.throttling import ReviewCreateThrottle, ReviewListThrottl
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from watchlist_app.api.pagination import WatchlistPagination
-
+from django.conf import settings
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
+from django.views.decorators.cache import cache_page
+from django.core.cache import cache
+from django.views.decorators.vary import vary_on_cookie
+from django.utils.decorators import method_decorator
 
 
 
@@ -113,6 +118,8 @@ class ReviewDetails(generics.RetrieveUpdateDestroyAPIView):
 
 
 # New Watchlist for filter backends
+# CATCHE_TTL = getattr(settings, 'CATCHE_TTL', DEFAULT_TIMEOUT)
+
 class WatchlistAV(generics.ListAPIView):
     queryset = Watchlist.objects.all()
     serializer_class = WatchlistSerializer
@@ -137,9 +144,13 @@ class WatchlistAV(generics.ListAPIView):
 
 class WatchlistListAV(APIView):
     # permission_classes = [IsAdminOrReadOnly]
-
+    @method_decorator(vary_on_cookie)
+    @method_decorator(cache_page(settings.CACHE_TTL))
+    
     def get(self, request):
+        print("from db")
         movie = Watchlist.objects.all()
+        # print("")
         serializer = WatchlistSerializer(movie, many=True,)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
