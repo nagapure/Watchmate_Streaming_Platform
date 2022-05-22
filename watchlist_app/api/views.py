@@ -21,7 +21,7 @@ from watchlist_app.api.permissions import IsAdminOrReadOnly, IsReviewUserOrReadO
 from watchlist_app.api.throttling import ReviewCreateThrottle, ReviewListThrottle
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
-from watchlist_app.api.pagination import WatchlistPagination
+from watchlist_app.api.pagination import WatchlistLOPagination, WatchlistPagination
 from django.conf import settings
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.views.decorators.cache import cache_page
@@ -123,7 +123,7 @@ class ReviewDetails(generics.RetrieveUpdateDestroyAPIView):
 class WatchlistAV(generics.ListAPIView):
     queryset = Watchlist.objects.all()
     serializer_class = WatchlistSerializer
-    pagination_class = WatchlistPagination
+    pagination_class = WatchlistLOPagination 
     
     
     
